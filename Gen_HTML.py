@@ -2,23 +2,27 @@ import os
 from openai import OpenAI
 
 #API CONFIG
-OPENAI_API_KEY = "WPROWADŹ SWOJ KLUCZ API"
+OPENAI_API_KEY = "wprowadź KLUCZ API"
 client = OpenAI(api_key=OPENAI_API_KEY)
+
+#w przypadku 4o 
+def remove_code_fences(content):
+    return content.replace("```html", "").replace("```", "")
 
 
 def BuildArtykul(system_prompt, user_prompt, article_content):
     completion = client.chat.completions.create(
-        model="gpt-3.5-turbo",
+        model="gpt-4o",
         messages=[
             # Rola systemu: Określenie wytycznych dla generowania HTML
             {"role": "system", "content": system_prompt},
             # Rola użytkownika: Przekazanie promptu i artykułu
-            {"role": "user", "content": user_prompt + "\n" + article_content}
+            {"role": "user", "content": user_prompt + "\n"+"article: "+ article_content}
         ]
     )
     
     output = completion.choices[0].message.content
-    return output
+    return remove_code_fences(output)
 
 
 system_prompt = (
@@ -27,16 +31,18 @@ system_prompt = (
     "Ensure the output is correctly indented and well-organized."
 )
 
+
+
 user_prompt = (
-    "Generate HTML code from the following article_content."
-    "The returned code should only contain content to be placed between <body> and </body> tags. Do not include <html>, <head>, or <body> tags. Do not include any CSS or JavaScript."
-    "Divide the text into separate sections by topic, with each section containing a header and a paragraph (<p>) of content related to that topic."
-    "After each section, add an image placeholder using the format: <figure> <img src='image_placeholder.jpg' alt='Detailed prompt for generating an image in DALL-E related to the paragraph content'> "
-    "<figcaption> A specific prompt for DALL-E describing the scene in detail based on the paragraph content. The prompt should describe exactly what the image should depict, including relevant objects, background, lighting, colors, and other visual details.</figcaption> </figure>."
-    "Ensure the alt text and <figcaption> are detailed and provide all necessary information for generating the image with DALL-E, based on the content of the paragraph."
-    "Additionally, include the following structure in the returned HTML: <header> <h1>Podgląd artykułu</h1> </header> "
-    "<div class='container'> Include the generated content for the sections here. </div> "
-    "<footer> <p>Oxido Recruitment Task &copy; 2024</p> </footer>"
+    "Generate HTML code from the following article_content "
+    "Do not include <html>, <head>, <body>, or ```html and ``` tags and any CSS or JavaScript code. "
+    "First line of the article is <header h1>, THERE IS ONLY ONE HEADER, for the others: If the text in the document occupies only one line and is short (max 6 words), it should be wrapped in an <h2> tag. If the text spans multiple lines, it should be wrapped in a <p> tag. Pack all in Wrap everything in <div class=container>"
+    "If content in <h2> is longer than 14 words convert it to <p>, and do not generate any text thats is not included article, do not create <h2> by yourself" 
+    "think carefully and place maximum three images in three relevant sections of the article that match the paragraph content using this format  <figure> <img src='image_placeholder.jpg' alt= Detailed prompt"
+    "Ensure the alt text is a detailed prompt in English for generating a high-quality image in the style of DALL-E. The prompt should accurately represent the paragraph's content with specific visual elements, such as objects, background setting, lighting, color schemes, and any other relevant details to create a visually rich and descriptive image."
+    "For example, instead of a general description like 'An image representing the ethical challenges of AI,' write a detailed prompt such as 'A futuristic cityscape at dusk with humanoid robots and humans interacting, soft ambient lighting, a blend of metallic and warm hues, showing harmony and tension between technology and humanity.'"
+    "add <figcaption> maximum 6 words summary of the image described in the alt (in Polish, max 6 words) </figcaption> </figure>."
+    "If there is a * before text write in italic"
 )
 
 #OpenArticleTXT
