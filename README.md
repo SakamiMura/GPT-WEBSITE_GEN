@@ -20,7 +20,4 @@ Otwórz plik Gen_HTML.py i wprowadź swój unikalny klucz API OpenAI.
 3. W pliku artykul.html powinien pojawić się świeżo wygenerowany kod zawierający szkielet artykułu wraz ze znacznikami HTML.
 4. Aby wyświetlić go w przeglądarce, możesz skorzystać z pliku podglad.html, wklej w wyznaczonej sekcji całość kodu jaki uzyskałeś w pliku artukul.html.
 
-Gotowe:)
-
-
 
