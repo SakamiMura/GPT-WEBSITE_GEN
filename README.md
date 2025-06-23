@@ -1,6 +1,3 @@
-# OxidoTask
-Zadanie rekrutacyjne Junior AI Developer 
-
 ## Działanie Aplikacji 
 Ten program służy do generowania kodu HTML na podstawie treści artykułu, korzystając z API OpenAI. 
 Program pobiera do api artykuł zapisany w pliku tekstowym (`artykulbase.txt`) oraz prompt użytkownika, a nastepnie konwertuje go na surową sekcję body kodu HTML.
